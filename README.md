@@ -15,18 +15,18 @@ along with three different material types:
 ## Example 
 
 ```rust
-
 fn main() {
 
-    let width = 500;
-    let height = 500;
-    let options = RenderOptions { samples: 256, max_bounces: 100 };
+    let width = 1280;
+    let height = 720;
+    let options = RenderOptions { samples: 1000, max_bounces: 100 };
 
     let camera = Camera::new(
+
         Vector::new(-0.5, 0.0, 3.0),
         Vector::new(1.2, 0.3, -4.0),    // Focal point
         Direction::new(0.0, 1.0, 0.0),
-        50.0,
+        45.0,
         (width / height) as f64,
         1.0 / 12.0,
     );
@@ -66,9 +66,8 @@ fn main() {
     println!("Raytracing");
     raytrace(camera, &objects, options, &mut img);
     println!("Saving image to file");
-    img.save("../samples/output.png");
+    img.save("samples/output.png");
 }
-
 ```
 
 ![](./samples/output.png)
