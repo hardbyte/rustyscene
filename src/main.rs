@@ -35,7 +35,7 @@ struct ImageProperties {
 
 const DEFAULT_IMAGE_PROPERTIES: ImageProperties = ImageProperties { width: 320, height: 300 };
 const MAX_VALUE: u8 = 255;
-const MAX_BOUNCES: u8 = 50;
+
 const DEFAULT_BG_COLOR: Color = Color::new(0.6, 0.6, 0.5);
 
 
@@ -87,7 +87,7 @@ fn hit<'a>(objects: &'a Scene, ray: &'a Ray, interval: &Range<Time>) -> Option<H
 }
 
 
-fn color<'a>(ray: &mut Ray, objects: &Scene, background: Color, max_bounces: u32) -> Color {
+fn color<'a>(ray: &mut Ray, objects: &Scene, max_bounces: u32) -> Color {
     let mut output_attenuation = Vector::new(1.0, 1.0, 1.0);
     let black = Color::new(0.0, 0.0, 0.0);
 
@@ -139,16 +139,14 @@ fn raytrace<'a>(camera: Camera, scene: &Scene, config: RenderOptions, output: &m
             let sample_range = 0..config.samples;
 
             let pixel: Color = sample_range.into_par_iter().map(|sample_number| {
-                let mut rng = rand::thread_rng();
-                let u = (rng.gen::<NumericType>() + col as NumericType) / width as NumericType;
-                let v = (rng.gen::<NumericType>() + row as NumericType) / height as NumericType;
-                let mut ray = camera.get_ray(u, v);
+                    let mut rng = rand::thread_rng();
+                    let u = (rng.gen::<NumericType>() + col as NumericType) / width as NumericType;
+                    let v = (rng.gen::<NumericType>() + row as NumericType) / height as NumericType;
+                    let mut ray = camera.get_ray(u, v);
 
-                // Color the ray
-                color(&mut ray, &scene, DEFAULT_BG_COLOR, config.max_bounces)
-
-                // Add this sample color to our pixel
-            })
+                    // Color the ray
+                    color(&mut ray, &scene, config.max_bounces)
+                })
                 .sum::<Color>() / (config.samples as NumericType);
 
 
@@ -165,11 +163,12 @@ fn raytrace<'a>(camera: Camera, scene: &Scene, config: RenderOptions, output: &m
 
 fn main() {
 
-    let width = 500;
-    let height = 500;
-    let options = RenderOptions { samples: 512, max_bounces: 200 };
+    let width = 1280;
+    let height = 720;
+    let options = RenderOptions { samples: 1000, max_bounces: 100 };
 
     let camera = Camera::new(
+
         Vector::new(-0.5, 0.0, 3.0),
         Vector::new(1.2, 0.3, -4.0),    // Focal point
         Direction::new(0.0, 1.0, 0.0),
@@ -213,5 +212,5 @@ fn main() {
     println!("Raytracing");
     raytrace(camera, &objects, options, &mut img);
     println!("Saving image to file");
-    img.save("../samples/output.png");
+    img.save("samples/output.png");
 }

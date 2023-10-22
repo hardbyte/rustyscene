@@ -1,9 +1,16 @@
+# Rustyscene
 
 A toy brute force path tracer written in Rust following the tutorial [Ray Tracing in one weekend](https://raytracing.github.io/).
 
-features basic primitive shapes:
+Features two basic primitive shapes:
 - `Sphere`
 - `Triangle`
+
+along with three different material types:
+- `Diffuse`
+- `Metallic`
+- `Dielectric`
+
 
 ## Example 
 
